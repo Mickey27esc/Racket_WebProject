@@ -3,13 +3,21 @@
 ; A blog is a (listof post)
 ; and a post is a (post title body)
 (struct problem (description solution))
- 
+
+(struct set (p1 p2 p3 p4 p5))
+
+;making problems
+(define prob1 (problem "Función que devuelve los numeros pares de una lista" "solution"))
+(define prob2 (problem "Función que devuelve una lista inversa" "solution2"))
+(define prob3 (problem "Función que ..." "solution"))
+(define prob4 (problem "Función que ..." "solution"))
+(define prob5 (problem "Función que ..." "solution"))
+
 ; BLOG: blog
 ; The static blog.
-(define SET
-  (list (problem "Descr 1" "solu 1")
-        (problem "Descr 2" "solu 2")))
- 
+(define SET (set prob1 prob2 prob3 prob4 prob5))
+
+
 ; start: request -> response
 ; Consumes a request and produces a page that displays all of the
 ; web content.
@@ -44,23 +52,41 @@
    `(html (head (title "SET of Problems"))
           (body
            (h1 "Set of problems")
-           ,(render-problems a-set)
+           
+           (h1 (set-description a-set))
            (form
-            (input ((name "description")))
-            (input ((name "solution")))
-            (input ((type "submit"))))))))
+            (input ((name "solution 1")))
+            (input ((type "submit")))
+            )
+           (form
+            (input ((name "solution 2")))
+            (input ((type "submit")))
+            )
+           (form
+            (input ((name "solution 3")))
+            (input ((type "submit")))
+            )
+           (form
+            (input ((name "solution 4")))
+            (input ((type "submit")))
+            )
+           (form
+            (input ((name "solution 5")))
+            (input ((type "submit")))
+            )
+           ))))
  
 ; render-post: post -> xexpr
 ; Consumes a post, produces an xexpr fragment of the post.
 (define (render-problem a-prob)
   `(div ((class "problem"))
-        ,(problem-title a-post)
-        (p ,(post-body a-post))))
+        ,(problem-description a-prob)
+        (p ,(problem-solution a-prob))))
  
  
 ; render-posts: blog -> xexpr
 ; Consumes a blog, produces an xexpr fragment
 ; of all its posts.
-(define (render-posts a-blog)
-  `(div ((class "posts"))
-        ,@(map render-post a-blog)))
+(define (render-problems a-prob)
+  `(div ((class "problems"))
+        ,@(map render-problem a-prob)))
