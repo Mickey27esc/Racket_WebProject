@@ -1,92 +1,82 @@
 #lang web-server/insta
- 
-; A blog is a (listof post)
-; and a post is a (post title body)
-(struct problem (description solution))
 
-(struct set (p1 p2 p3 p4 p5))
+;El SOLUCIONARIO está conformadO por SOLUCIONES.
+(struct solucion (s))
 
-;making problems
-(define prob1 (problem "Función que devuelve los numeros pares de una lista" "solution"))
-(define prob2 (problem "Función que devuelve una lista inversa" "solution2"))
-(define prob3 (problem "Función que ..." "solution"))
-(define prob4 (problem "Función que ..." "solution"))
-(define prob5 (problem "Función que ..." "solution"))
+;SOLUCIONARIO : lista de soluciones 
+(define SOLUCIONARIO
+  (list (solucion "")
+        )
+  )
 
-; BLOG: blog
-; The static blog.
-(define SET (set prob1 prob2 prob3 prob4 prob5))
-
-
-; start: request -> response
-; Consumes a request and produces a page that displays all of the
-; web content.
+;start request -> response
 (define (start request)
-  (define a-set
-    (cond [(can-parse-problem? (request-bindings request))
-           (cons (parse-problem (request-bindings request))
-                 SET)]
-          [else
-           SET]))
-  (render-set-page a-set request))
- 
- 
-; can-parse-post?: bindings -> boolean
-; Produces true if bindings contains values for 'title and 'body.
-(define (can-parse-problem? bindings)
-  (and (exists-binding? 'description bindings)
-       (exists-binding? 'solution bindings)))
- 
- 
-; parse-post: bindings -> post
-; Consumes a bindings, and produces a post out of the bindings.
-(define (parse-problem bindings)
-  (problem (extract-binding/single 'description bindings)
-           (extract-binding/single 'solution bindings)))
- 
-; render-blog-page: blog request -> response
-; Consumes a blog and a request, and produces an HTML page
-; of the content of the blog.
-(define (render-set-page a-set request)
+  (define a-solucion
+    (cond
+      [(can-parse-solucion? (request-bindings request)) (cons SOLUCIONARIO (parse-solucion (request-bindings request)))]
+      [else SOLUCIONARIO])
+    )
+  (render-page a-solucion request)
+  )
+
+
+;can-parse-solucion?: bindings -> boolean
+; Produces true if bindings contains values for every "solution"
+(define (can-parse-solucion? bindings)
+  (and (exists-binding? 'solution1 bindings)
+       (and (exists-binding? 'solution2 bindings)
+            (and (exists-binding? 'solution3 bindings)
+                 (and (exists-binding? 'solution4 bindings)
+                       (exists-binding? 'solution5 bindings)
+                       )
+                 )
+            )
+       )
+  )
+
+;parse.-solucion: binding -> listof solucion
+;Toma los bindings y devuelve una lista que sera utilizada para imprimir 
+(define (parse-solucion binding)
+  (list (solucion (extract-binding/single 'solucion1))
+        (solucion (extract-binding/single 'solucion2))
+        (solucion (extract-binding/single 'solucion3))
+        (solucion (extract-binding/single 'solucion4))
+        (solucion (extract-binding/single 'solucion5))
+        )
+)
+
+
+(define (render-page a-solucion request)
   (response/xexpr
-   `(html (head (title "SET of Problems"))
+   `(html (head (title "PROYECTO DE TEORIA "))
           (body
-           (h1 "Set of problems")
-           
-           (h1 (set-description a-set))
+           (h1 "PROGRAMACION FUNCIONAL")
+           ;Ejercicio 1
+           (p "Función que devuelve los numeros pares de una lista")
            (form
-            (input ((name "solution 1")))
-            (input ((type "submit")))
-            )
+            (input ((name "solucion1")))
+            (input ((type "submit"))))
+           ;Ejercicio 2
+           (p "Función que devuelve la lista inversa")
            (form
-            (input ((name "solution 2")))
-            (input ((type "submit")))
-            )
+            (input ((name "solucion2")))
+            (input ((type "submit"))))
+           ;Ejercicio 3
+           (p "Función ...")
            (form
-            (input ((name "solution 3")))
-            (input ((type "submit")))
-            )
+            (input ((name "solucion3")))
+            (input ((type "submit"))))
+           ;Ejercicio 4
+           (p "Función ...")
            (form
-            (input ((name "solution 4")))
-            (input ((type "submit")))
-            )
+            (input ((name "solucion4")))
+            (input ((type "submit"))))
+           ;Ejercicio 5
+           (p "Función ...")
            (form
-            (input ((name "solution 5")))
-            (input ((type "submit")))
-            )
-           ))))
- 
-; render-post: post -> xexpr
-; Consumes a post, produces an xexpr fragment of the post.
-(define (render-problem a-prob)
-  `(div ((class "problem"))
-        ,(problem-description a-prob)
-        (p ,(problem-solution a-prob))))
- 
- 
-; render-posts: blog -> xexpr
-; Consumes a blog, produces an xexpr fragment
-; of all its posts.
-(define (render-problems a-prob)
-  `(div ((class "problems"))
-        ,@(map render-problem a-prob)))
+            (input ((name "solucion5")))
+            (input ((type "submit"))))
+           )
+  )
+ )
+)
